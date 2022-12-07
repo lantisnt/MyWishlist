@@ -140,7 +140,7 @@ local lineNum = 0
 local function BuildWishlistLine(order, entry, seqId, total)
     local itemId, _, _, _, icon, _, _ = GetItemInfoInstant(entry:GetItemID())
     if itemId then
-        local link = entry:GetItemLink()
+        local link = entry:GetItemLink() or ("item:" .. tostring(itemId))
         local rowPrefix = "wlit" .. tostring(itemId) .. "ln" .. tostring(lineNum)
 
         wishlistOptions.args[rowPrefix .. "icon"  ], order = BuildWishlist_EntryIcon(order, icon, link)
