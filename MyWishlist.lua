@@ -22,7 +22,8 @@ local defaults = {
             patch = 0,
             changeset = "000000"
         },
-        versionString = "v0.0.0-000000"
+        versionString = "v0.0.0-000000",
+        lock = false
     },
     profile = {
         wishlists = {},

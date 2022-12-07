@@ -6,10 +6,10 @@ local tostring = tostring
 local WishlistEntry = {} -- WishlistEntry
 WishlistEntry.__index = WishlistEntry
 
-local strsub30 = MWL.Utils.strsub30
+local strsub20 = MWL.Utils.strsub20
 
 local function LimitNote(note)
-    return strsub30(tostring(note or ""))
+    return strsub20(tostring(note or ""))
 end
 
 function WishlistEntry:New(item, note)

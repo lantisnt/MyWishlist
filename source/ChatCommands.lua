@@ -6,7 +6,6 @@ local AceConsole = LibStub("AceConsole-3.0")
 
 
 local function HandlePrio(itemLink)
-    print("HandlePrio")
     local itemId = MWL.Utils.GetItemIdFromLink(itemLink)
     if not itemId then
         -- TODO HANDLE ERROR
@@ -24,9 +23,14 @@ local function HandleDeprio(itemLink)
     end
 end
 
+local function HandleMwl()
+    MWL.GUI:Toggle()
+end
+
 function ChatCommands:Register()
     AceConsole:RegisterChatCommand("prio", HandlePrio)
     AceConsole:RegisterChatCommand("deprio", HandleDeprio)
+    AceConsole:RegisterChatCommand("mwl", HandleMwl)
 end
 
 MWL.ChatCommands = ChatCommands

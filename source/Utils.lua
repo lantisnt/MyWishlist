@@ -45,8 +45,12 @@ function Utils.GetItemIdFromLink(itemLink)
 end
 
 
-function Utils.strsub30(s)
-    return strsub(s, 1, 30)
+function Utils.strsub20(s)
+    return strsub(s, 1, 20)
+end
+
+function Utils.ColorCodeText(text, color)
+    return sformat("|cff%s%s|r", color, text)
 end
 
 MWL.Utils = Utils

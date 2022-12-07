@@ -2,7 +2,7 @@ local _,  MWL = ...
 
 local pairs, ipairs, type = pairs, ipairs, type
 local Item, GetItemInfoInstant = Item, GetItemInfoInstant
-local tinsert = table.insert
+local tinsert, tremove = table.insert, table.remove
 
 local Manager = {}
 
@@ -53,7 +53,17 @@ local function BuildWishlistsFromDatabase(self)
 end
 
 local function Store()
-    Manager:Store()
+    for slot, _ in pairs(MWL.InternalSlots) do
+        MWL.Core.db.profile.wishlists[slot] = {}
+        for _, entry in ipairs(Manager.wishlists[slot]) do
+            if not entry:IsItemEmpty() then
+                MWL.Core.db.profile.wishlists[slot][#MWL.Core.db.profile.wishlists[slot]+1] = {
+                    id = tonumber(entry:GetItemID()) or 0,
+                    note = tostring(entry:GetNote()) or ""
+                }
+            end
+        end
+    end
 end
 
 local function RegisterDBCallbacks(self)
@@ -66,7 +76,7 @@ function Manager:Initialize()
 end
 
 local function AddItemInternal(self, itemId, note, position)
-    print("AddItemInternal")
+    if self:IsLocked() then return end
     local item = Item:CreateFromItemID(itemId)
     if item:IsItemEmpty() then return end
 
@@ -74,13 +84,11 @@ local function AddItemInternal(self, itemId, note, position)
 
     local slot = INVTYPE_to_MWL_slot_map[itemEquipLoc] or MWL.InternalSlots.Miscellaneous
     local entry = MWL.NewWishlistEntry(item, note)
-    print(itemId, item, slot, entry, position)
     tinsert(self.wishlists[slot], position, entry)
-    print("tinsert")
 end
 
 function Manager:AddItemById(itemId, note, position)
-    print("AddItemById")
+    if self:IsLocked() then return end
     itemId = tonumber(itemId) or 0
     if not GetItemInfoInstant(itemId) then return end
     if type(note) ~= "string" then
@@ -91,6 +99,7 @@ function Manager:AddItemById(itemId, note, position)
 end
 
 function Manager:AddItemByLink(itemLink, note, position)
+    if self:IsLocked() then return end
     local itemId = MWL.Utils.GetItemIdFromLink(itemLink)
     if not itemId then return end
     if not GetItemInfoInstant(itemId) then return end
@@ -105,18 +114,33 @@ function Manager:GetWishlist(slot)
     return self.wishlists[slot] or {}
 end
 
-function Manager:Store()
-    for slot, _ in pairs(MWL.InternalSlots) do
-        MWL.Core.db.profile.wishlists[slot] = {}
-        for _, entry in ipairs(self.wishlists[slot]) do
-            if not entry:IsItemEmpty() then
-                MWL.Core.db.profile.wishlists[slot][#MWL.Core.db.profile.wishlists[slot]+1] = {
-                    id = tonumber(entry:GetItemID()) or 0,
-                    note = tostring(entry:GetNote()) or ""
-                }
-            end
-        end
-    end
+function Manager:MoveWishlistItemUp(slot, seqId)
+    if self:IsLocked() then return end
+    local entry = tremove(self.wishlists[slot], seqId)
+    tinsert(self.wishlists[slot], seqId - 1, entry)
+end
+
+function Manager:MoveWishlistItemDown(slot, seqId)
+    if self:IsLocked() then return end
+    local entry = tremove(self.wishlists[slot], seqId)
+    tinsert(self.wishlists[slot], seqId + 1, entry)
+end
+
+function Manager:RemoveWishlistItem(slot, seqId)
+    if self:IsLocked() then return end
+    tremove(self.wishlists[slot], seqId)
+end
+
+function Manager:IsLocked()
+    return MWL.Core.db.global.lock
+end
+
+function Manager:Lock()
+    MWL.Core.db.global.lock = true
+end
+
+function Manager:Unlock()
+    MWL.Core.db.global.lock = false
 end
 
 MWL.Manager = Manager
