@@ -234,9 +234,9 @@ local function UpdateOptions(self)
                 if tonumber(v) then
                     v = "item:" .. tostring(v)
                 end
-                local itemId = MWL.Utils.GetItemIdFromLink(v)
-                if itemId and GetItemInfoInstant(itemId) then
-                    local item = Item:CreateFromItemID(itemId)
+                local _itemId = MWL.Utils.GetItemIdFromLink(v)
+                if _itemId and GetItemInfoInstant(_itemId) then
+                    local item = Item:CreateFromItemID(_itemId)
                     if item:IsItemDataCached() then
                         self.itemToAdd = item:GetItemLink()
                         self:Refresh()
@@ -246,7 +246,7 @@ local function UpdateOptions(self)
                             self:Refresh()
                         end)
                         -- self:Refresh()
-                        self.itemToAdd = "item:" .. tostring(itemId)
+                        self.itemToAdd = "item:" .. tostring(_itemId)
                     end
                 end
             end),
@@ -346,8 +346,8 @@ local function CreateWindow(self)
     f:SetHeight(MWL.Core.db.profile.gui.height)
     -- f:EnableResize(false)
     local originalOnHeightSet = f.OnHeightSet
-    f.OnHeightSet = function(_self, height)
-        originalOnHeightSet(_self, height)
+    f.OnHeightSet = function(this, height)
+        originalOnHeightSet(this, height)
         MWL.Core.db.profile.gui.height = height
         UpdateSize(self)
     end

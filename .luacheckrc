@@ -6,6 +6,7 @@ max_line_length = false
 exclude_files = {
 	"**/Libs/**",
 	"**/.git/**",
+	"**/.release/**",
 	"**/scripts/**"
 }
 ignore = {
@@ -36,6 +37,7 @@ globals = {
 	"KeyBindingFrame",
 	"InterfaceOptionsFrame",
 	-- FrameXML misc
+	"Item",
 	"ALTERNATE_POWER_INDEX",
 	"BNET_CLIENT_WOW",
 	"CHALLENGE_MODE_MEDAL1",

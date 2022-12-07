@@ -44,8 +44,6 @@ do
 end
 
 function Core:OnInitialize()
--- do init tasks here, like loading the Saved Variables, 
--- or setting up slash commands.
     self.db = LibStub("AceDB-3.0"):New("MWL_DB", defaults, true)
 
     local newVersion = MWL.Utils.GetVersion("@project-version@")
@@ -61,9 +59,6 @@ function Core:OnInitialize()
 end
 
 function Core:OnEnable()
--- Do more initialization here, that really enables the use of your addon.
--- Register Events, Hook functions, Create Frames, Get information from 
--- the game that wasn't available in OnInitialize
     MWL.Manager:Initialize()
     -- MWL.Settings:Initialize()
     MWL.GUI:Initialize()
@@ -79,5 +74,3 @@ function Core:GetVersionString()
 end
 
 MWL.Core = Core
-
-MyWishlist = MWL

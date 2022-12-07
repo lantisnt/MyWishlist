@@ -62,10 +62,10 @@ local function BuildWishlistsFromDatabase(self)
     self.wishlists = {}
     self.wishlistedItemMap = {}
     self.wishlistedItemSlotMap = {}
-    for slot, data in pairs(MWL.InternalSlots) do
+    for slot, _ in pairs(MWL.InternalSlots) do
         self.wishlists[slot] = {}
         self.wishlistedItemMap[slot] = {}
-        for seq, entry in ipairs(MWL.Core.db.profile.wishlists[slot]) do
+        for _, entry in ipairs(MWL.Core.db.profile.wishlists[slot]) do
             local item = Item:CreateFromItemID(entry.id)
             if not item:IsItemEmpty() then
                 UpdateWishlistedItemMetadata(self, entry.id, true)
@@ -169,7 +169,7 @@ function Manager:GetWishlistedItems(itemId)
     local items = {}
     if not self:IsItemWishlisted(itemId) then return items end
     if not self:GetWishlistedItemSlot(itemId) then return items end
-    
+
     for _,entry in ipairs(self.wishlists[self:GetWishlistedItemSlot(itemId)]) do
         if entry:GetItemID() == itemId then
             items[#items+1] = entry

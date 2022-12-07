@@ -51,12 +51,12 @@ local function CreateMinimapDBI(self, dropdown)
     icon:Register(addonName, MWL.MinimapDBI, MWL.Core.db.profile.minimap)
 end
 
-local dropdown
+-- local dropdown
 local Minimap = {}
 
 function Minimap:Initialize()
     -- Create Minimap Icon
-    CreateMinimapDBI(self, dropdown)
+    CreateMinimapDBI(self, nil)
 
     -- Hook Minimap Icon
     hooksecurefunc(MWL.Manager, "Lock", function()

@@ -1,6 +1,5 @@
 local _, MWL = ...
 
-local Item = Item
 local tostring = tostring
 
 local WishlistEntry = {} -- WishlistEntry
