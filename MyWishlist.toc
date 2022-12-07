@@ -1,0 +1,23 @@
+## Interface: 30400
+## Interface-Wrath: 30400
+## X-Min-Interface: 30400
+## X-Min-Interface-Wrath: 30400
+## Title: My Wishlist
+## Notes: Wishlist AddOn
+## Author: Lantis
+## Version: @project-version@
+## OptionalDeps: LibStub, Gargul, RCLootCouncil_Classic, Ace3, ClassicLootManager
+## X-License: MIT
+# X-Curse-Project-ID:
+# X-Wago-ID:
+## SavedVariables: MWL_DB
+## LoadOnDemand: 0
+
+# Libs
+
+# AddOn
+
+MyWishlist.lua
+
+source/Utils.lua
+source/ChatCommands.lua
