@@ -31,6 +31,8 @@ function ChatCommands:Register()
     AceConsole:RegisterChatCommand("prio", HandlePrio)
     AceConsole:RegisterChatCommand("deprio", HandleDeprio)
     AceConsole:RegisterChatCommand("mwl", HandleMwl)
+    AceConsole:RegisterChatCommand("mywishlist", HandleMwl)
+    AceConsole:RegisterChatCommand("wishlist", HandleMwl)
 end
 
 MWL.ChatCommands = ChatCommands

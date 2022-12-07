@@ -7,11 +7,14 @@ local AceConfigDialog = LibStub("AceConfigDialog-3.0")
 local strsub20 = MWL.Utils.strsub20
 
 local REGISTRY = "mywishlist_gui_registry"
+local WISHLIST_REGISTRY = "mywishlist_gui_wishlist_registry"
 
 local _, _, _, isElvUI = GetAddOnInfo("ElvUI")
 
 local BASE_WIDTH_LOCKED    = 285 + (isElvUI and 10 or 0)
 local BASE_WIDTH_UNLOCKED  = 535 + (isElvUI and 10 or 0)
+
+local BASE_HEIGHT = 380
 
 local GUI = {}
 
@@ -140,16 +143,16 @@ local function BuildWishlistLine(order, entry, seqId, total)
         local link = entry:GetItemLink()
         local rowPrefix = "wlit" .. tostring(itemId) .. "ln" .. tostring(lineNum)
 
-        options.args[rowPrefix .. "icon"  ], order = BuildWishlist_EntryIcon(order, icon, link)
-        options.args[rowPrefix .. "link"  ], order = BuildWishlist_EntryLink(order, link)
+        wishlistOptions.args[rowPrefix .. "icon"  ], order = BuildWishlist_EntryIcon(order, icon, link)
+        wishlistOptions.args[rowPrefix .. "link"  ], order = BuildWishlist_EntryLink(order, link)
         if MWL.Manager:IsLocked() then
-            options.args[rowPrefix .. "pad"   ], order = BuildWishlist_EntryPad(order)
-            options.args[rowPrefix .. "note"  ], order = BuildWishlist_EntryNoteReadOnly(order, entry)
+            wishlistOptions.args[rowPrefix .. "pad"   ], order = BuildWishlist_EntryPad(order)
+            wishlistOptions.args[rowPrefix .. "note"  ], order = BuildWishlist_EntryNoteReadOnly(order, entry)
         else
-            options.args[rowPrefix .. "note"  ], order = BuildWishlist_EntryNote(order, entry)
-            options.args[rowPrefix .. "up"    ], order = BuildWishlist_Up(order, MWL.Core.db.profile.selectedGuiSlot, seqId, total)
-            options.args[rowPrefix .. "down"  ], order = BuildWishlist_Down(order, MWL.Core.db.profile.selectedGuiSlot, seqId, total)
-            options.args[rowPrefix .. "delete"], order = BuildWishlist_Delete(order, MWL.Core.db.profile.selectedGuiSlot, seqId, total)
+            wishlistOptions.args[rowPrefix .. "note"  ], order = BuildWishlist_EntryNote(order, entry)
+            wishlistOptions.args[rowPrefix .. "up"    ], order = BuildWishlist_Up(order, MWL.Core.db.profile.selectedGuiSlot, seqId, total)
+            wishlistOptions.args[rowPrefix .. "down"  ], order = BuildWishlist_Down(order, MWL.Core.db.profile.selectedGuiSlot, seqId, total)
+            wishlistOptions.args[rowPrefix .. "delete"], order = BuildWishlist_Delete(order, MWL.Core.db.profile.selectedGuiSlot, seqId, total)
         end
         lineNum = lineNum + 1
     end
@@ -158,13 +161,14 @@ end
 
 local function UpdateOptions(self)
     options.args = {}
+    wishlistOptions.args = {}
     local itemId, _, _, _, itemIcon, _, _ = GetItemInfoInstant(self.itemToAdd or 0)
     local icon = itemIcon or "Interface\\Icons\\INV_Misc_QuestionMark"
     local link = itemId and ("item:"..tostring(itemId)) or "item:0"
 
-    local padding_width = 1.75
+    local padding_width = 1.85
     if MWL.Manager:IsLocked() then
-        padding_width = 0.25
+        padding_width = 0.35
     end
 
     options.args = {
@@ -274,7 +278,7 @@ local function UpdateOptions(self)
                 self:Refresh()
             end),
             hidden = (function(i) return MWL.Manager:IsLocked() end),
-            width = 0.5,
+            width = 0.6,
             order = 8
         },
         wishlist_header = {
@@ -294,23 +298,52 @@ end
 local function CreateOptions(self)
     local OptionsGroup = AceGUI:Create("SimpleGroup")
     OptionsGroup:SetLayout("Flow")
-    OptionsGroup:SetWidth(535)
-    self.OptionsGroup = OptionsGroup
+    -- OptionsGroup:SetWidth(535)
+    
+
+    local WishlistOptionsScrollGroup = AceGUI:Create("ScrollFrame")
+    -- OptionsGroup:SetWidth(535)
+    -- WishlistOptionsScrollGroup:SetHeight(BASE_HEIGHT - 250)
+
+    local WishlistOptionsGroup = AceGUI:Create("SimpleGroup")
+    WishlistOptionsGroup:SetLayout("Flow")
+
+    WishlistOptionsScrollGroup:AddChild(WishlistOptionsGroup)
+
     UpdateOptions(self)
     AceConfigRegistry:RegisterOptionsTable(REGISTRY, options)
     AceConfigDialog:Open(REGISTRY, OptionsGroup)
 
-    return OptionsGroup
+    AceConfigRegistry:RegisterOptionsTable(WISHLIST_REGISTRY, wishlistOptions)
+    AceConfigDialog:Open(WISHLIST_REGISTRY, WishlistOptionsGroup)
+
+    self.OptionsGroup = OptionsGroup
+    self.WishlistOptionsGroup = WishlistOptionsGroup
+    self.WishlistOptionsScrollGroup = WishlistOptionsScrollGroup
+
+    return OptionsGroup, WishlistOptionsScrollGroup
 end
 
 local function UpdateSize(self)
     if MWL.Manager:IsLocked() then
-        self.window:SetWidth(BASE_WIDTH_LOCKED)
-        self.OptionsGroup:SetWidth(BASE_WIDTH_LOCKED)
+        self.window:SetWidth(BASE_WIDTH_LOCKED + 17)
+        self.OptionsGroup:SetWidth(BASE_WIDTH_LOCKED + 17)
+        self.WishlistOptionsGroup:SetWidth(BASE_WIDTH_LOCKED)
+        self.WishlistOptionsScrollGroup:SetWidth(BASE_WIDTH_LOCKED + 17)
+        -- self.WishlistOptionsScrollGroup:SetHeight(BASE_HEIGHT - 125)
+        self.WishlistOptionsScrollGroup:SetHeight(self.window.content.height + 57 - 125 - 15)
     else
-        self.window:SetWidth(BASE_WIDTH_UNLOCKED)
-        self.OptionsGroup:SetWidth(BASE_WIDTH_UNLOCKED)
+        self.window:SetWidth(BASE_WIDTH_UNLOCKED + 17)
+        self.OptionsGroup:SetWidth(BASE_WIDTH_UNLOCKED + 17)
+        self.WishlistOptionsGroup:SetWidth(BASE_WIDTH_UNLOCKED)
+        self.WishlistOptionsScrollGroup:SetWidth(BASE_WIDTH_UNLOCKED + 17)
+
+        -- self.WishlistOptionsScrollGroup:SetHeight(BASE_HEIGHT - 190)
+        self.WishlistOptionsScrollGroup:SetHeight(self.window.content.height + 57 - 190 - 15)
     end
+    self.OptionsGroup:DoLayout()
+    self.WishlistOptionsGroup:DoLayout()
+    self.WishlistOptionsScrollGroup:DoLayout()
 end
 
 local function CreateWindow(self)
@@ -319,9 +352,16 @@ local function CreateWindow(self)
     f:SetTitle("My Wishlist")
     f:SetStatusText("")
     f:SetLayout("flow")
-    f:SetWidth(535)
-    f:EnableResize(false)
-    f:AddChild(CreateOptions(self))
+    f:SetHeight(BASE_HEIGHT)
+    -- f:EnableResize(false)
+    local originalOnHeightSet = f.OnHeightSet
+    f.OnHeightSet = function (...)
+        originalOnHeightSet(...)
+        UpdateSize(self)
+    end
+    local op, sc = CreateOptions(self)
+    f:AddChild(op)
+    f:AddChild(sc)
     self.window = f
 end
 
@@ -333,8 +373,10 @@ end
 function GUI:Refresh()
     UpdateOptions(self)
     AceConfigRegistry:RegisterOptionsTable(REGISTRY, options)
-    UpdateSize(self)
     AceConfigDialog:Open(REGISTRY, self.OptionsGroup)
+    AceConfigRegistry:RegisterOptionsTable(WISHLIST_REGISTRY, wishlistOptions)
+    AceConfigDialog:Open(WISHLIST_REGISTRY, self.WishlistOptionsGroup)
+    UpdateSize(self)
 end
 
 function GUI:Show()
@@ -347,7 +389,7 @@ function GUI:Hide()
 end
 
 function GUI:Toggle()
-    if self.window.frame:IsVisble() then
+    if self.window:IsVisible() then
         self.window:Hide()
     else
         self.window:Show()
