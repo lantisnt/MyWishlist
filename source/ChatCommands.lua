@@ -6,11 +6,14 @@ local AceConsole = LibStub("AceConsole-3.0")
 
 
 local function HandlePrio(itemLink)
+    print("HandlePrio")
     local itemId = MWL.Utils.GetItemIdFromLink(itemLink)
     if not itemId then
         -- TODO HANDLE ERROR
         return
     end
+
+    MWL.Manager:AddItemById(itemId, "Slash CMD")
 end
 
 local function HandleDeprio(itemLink)

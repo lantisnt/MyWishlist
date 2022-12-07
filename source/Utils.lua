@@ -2,10 +2,11 @@ local _, MWL = ...
 
 local smatch, sformat, sfind = string.match, string.format, string.find
 local tonumber = tonumber
+local strsub = strsub
 
 local Utils = {}
 
-function Utils.ParseVersionString(versionString)
+function Utils.GetVersion(versionString)
     local major, minor, patch, changeset = smatch(versionString, "^v(%d+).(%d+).(%d+)-?(.*)")
     return {
         major = tonumber(major) or 0,
@@ -41,6 +42,11 @@ function Utils.GetItemIdFromLink(itemLink)
     itemLink = itemLink or ""
     local _, _, _, _, itemId = sfind(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+).*")
     return tonumber(itemId)
+end
+
+
+function Utils.strsub30(s)
+    return strsub(s, 1, 30)
 end
 
 MWL.Utils = Utils

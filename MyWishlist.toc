@@ -8,16 +8,30 @@
 ## Version: @project-version@
 ## OptionalDeps: LibStub, Gargul, RCLootCouncil_Classic, Ace3, ClassicLootManager
 ## X-License: MIT
-# X-Curse-Project-ID:
+## X-Curse-Project-ID: 724206
 # X-Wago-ID:
 ## SavedVariables: MWL_DB
 ## LoadOnDemand: 0
 
 # Libs
-
+Libs\LibStub\LibStub.lua
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
+Libs\Ace3\AceAddon-3.0\AceAddon-3.0.xml
+Libs\Ace3\AceEvent-3.0\AceEvent-3.0.xml
+Libs\Ace3\AceTimer-3.0\AceTimer-3.0.xml
+Libs\Ace3\AceBucket-3.0\AceBucket-3.0.xml
+Libs\Ace3\AceHook-3.0\AceHook-3.0.xml
+Libs\Ace3\AceConsole-3.0\AceConsole-3.0.xml
+Libs\Ace3\AceGUI-3.0\AceGUI-3.0.xml
+Libs\Ace3\AceDB-3.0\AceDB-3.0.xml
+Libs\Ace3\AceConfig-3.0\AceConfig-3.0.xml
+#Libs\Ace3\AceComm-3.0\AceComm-3.0.xml
 # AddOn
 
 MyWishlist.lua
 
 source/Utils.lua
+source/WishlistEntry.lua
 source/ChatCommands.lua
+source/Manager.lua
+source/GUI.lua
