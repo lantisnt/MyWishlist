@@ -9,7 +9,7 @@
 ## OptionalDeps: LibStub, Gargul, RCLootCouncil_Classic, Ace3, ClassicLootManager
 ## X-License: MIT
 ## X-Curse-Project-ID: 724206
-# X-Wago-ID:
+## X-Wago-ID: RqGZ1dKd
 ## SavedVariables: MWL_DB
 ## LoadOnDemand: 0
 
