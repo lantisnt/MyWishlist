@@ -39,13 +39,36 @@ local INVTYPE_to_MWL_slot_map = {
 --     [INVSLOT_TRINKET2] = INVSLOT_TRINKET1
 -- }
 
+local function UpdateWishlistedItemMetadata(self, id, add)
+    if not self.wishlistedItemMap[id] then
+        self.wishlistedItemMap[id] = 0
+
+        -- Slot
+        local _, _, _, itemEquipLoc, _, _, _ = GetItemInfoInstant(id)
+        local slot = INVTYPE_to_MWL_slot_map[itemEquipLoc] or MWL.InternalSlots.Miscellaneous
+        self.wishlistedItemSlotMap[id] = slot
+    end
+    if add then
+        self.wishlistedItemMap[id] = self.wishlistedItemMap[id] + 1
+    else
+        self.wishlistedItemMap[id] = self.wishlistedItemMap[id] - 1
+        if self.wishlistedItemMap[id] < 0 then
+            error("Wishlisted item count went below 0", 2)
+        end
+    end
+end
+
 local function BuildWishlistsFromDatabase(self)
     self.wishlists = {}
+    self.wishlistedItemMap = {}
+    self.wishlistedItemSlotMap = {}
     for slot, data in pairs(MWL.InternalSlots) do
         self.wishlists[slot] = {}
-        for _, entry in ipairs(MWL.Core.db.profile.wishlists[slot]) do
+        self.wishlistedItemMap[slot] = {}
+        for seq, entry in ipairs(MWL.Core.db.profile.wishlists[slot]) do
             local item = Item:CreateFromItemID(entry.id)
             if not item:IsItemEmpty() then
+                UpdateWishlistedItemMetadata(self, entry.id, true)
                 self.wishlists[slot][#self.wishlists[slot]+1] = MWL.NewWishlistEntry(item, entry.note)
             end
         end
@@ -85,6 +108,7 @@ local function AddItemInternal(self, itemId, note, position)
     local slot = INVTYPE_to_MWL_slot_map[itemEquipLoc] or MWL.InternalSlots.Miscellaneous
     local entry = MWL.NewWishlistEntry(item, note)
     tinsert(self.wishlists[slot], position, entry)
+    UpdateWishlistedItemMetadata(self, itemId, true)
 end
 
 function Manager:AddItemById(itemId, note, position)
@@ -117,7 +141,8 @@ end
 function Manager:MoveWishlistItemUp(slot, seqId)
     if self:IsLocked() then return end
     local entry = tremove(self.wishlists[slot], seqId)
-    tinsert(self.wishlists[slot], seqId - 1, entry)
+    local newSeq = seqId - 1
+    tinsert(self.wishlists[slot], newSeq, entry)
 end
 
 function Manager:MoveWishlistItemDown(slot, seqId)
@@ -128,7 +153,30 @@ end
 
 function Manager:RemoveWishlistItem(slot, seqId)
     if self:IsLocked() then return end
-    tremove(self.wishlists[slot], seqId)
+    local entry = tremove(self.wishlists[slot], seqId)
+    UpdateWishlistedItemMetadata(self, entry:GetItemID(), false)
+end
+
+function Manager:IsItemWishlisted(itemId)
+    return self.wishlistedItemMap[itemId] and self.wishlistedItemMap[itemId] > 0
+end
+
+function Manager:GetWishlistedItemSlot(itemId)
+    return self.wishlistedItemSlotMap[itemId]
+end
+
+function Manager:GetWishlistedItems(itemId)
+    local items = {}
+    if not self:IsItemWishlisted(itemId) then return items end
+    if not self:GetWishlistedItemSlot(itemId) then return items end
+    
+    for _,entry in ipairs(self.wishlists[self:GetWishlistedItemSlot(itemId)]) do
+        if entry:GetItemID() == itemId then
+            items[#items+1] = entry
+        end
+    end
+
+    return items
 end
 
 function Manager:IsLocked()
@@ -141,6 +189,14 @@ end
 
 function Manager:Unlock()
     MWL.Core.db.global.lock = false
+end
+
+function Manager:ToggleLock()
+    if self:IsLocked() then
+        self:Unlock()
+    else
+        self:Lock()
+    end
 end
 
 MWL.Manager = Manager

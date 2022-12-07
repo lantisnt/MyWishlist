@@ -195,11 +195,7 @@ local function UpdateOptions(self)
             end),
             type = "execute",
             func = (function(i)
-                if MWL.Manager:IsLocked() then
-                    MWL.Manager:Unlock()
-                else
-                    MWL.Manager:Lock()
-                end
+                MWL.Manager:ToggleLock()
                 self:Refresh()
             end),
             width = 0.25,

@@ -27,6 +27,7 @@ local defaults = {
     },
     profile = {
         wishlists = {},
+        minimap = {}
     }
 }
 do
@@ -63,6 +64,7 @@ function Core:OnEnable()
     MWL.Manager:Initialize()
     -- MWL.Settings:Initialize()
     MWL.GUI:Initialize()
+    MWL.Minimap:Initialize()
 end
 
 function Core:GetVersion()

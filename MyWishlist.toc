@@ -35,3 +35,5 @@ source/WishlistEntry.lua
 source/ChatCommands.lua
 source/Manager.lua
 source/GUI.lua
+source/Tooltips.lua
+source/MinimapIcon.lua
