@@ -14,7 +14,7 @@ local _, _, _, isElvUI = GetAddOnInfo("ElvUI")
 local BASE_WIDTH_LOCKED    = 285 + (isElvUI and 10 or 0)
 local BASE_WIDTH_UNLOCKED  = 535 + (isElvUI and 10 or 0)
 
-local BASE_HEIGHT = 380
+-- local BASE_HEIGHT = 380
 
 local GUI = {}
 
@@ -294,12 +294,8 @@ end
 local function CreateOptions(self)
     local OptionsGroup = AceGUI:Create("SimpleGroup")
     OptionsGroup:SetLayout("Flow")
-    -- OptionsGroup:SetWidth(535)
-    
 
     local WishlistOptionsScrollGroup = AceGUI:Create("ScrollFrame")
-    -- OptionsGroup:SetWidth(535)
-    -- WishlistOptionsScrollGroup:SetHeight(BASE_HEIGHT - 250)
 
     local WishlistOptionsGroup = AceGUI:Create("SimpleGroup")
     WishlistOptionsGroup:SetLayout("Flow")
@@ -326,16 +322,15 @@ local function UpdateSize(self)
         self.OptionsGroup:SetWidth(BASE_WIDTH_LOCKED + 17)
         self.WishlistOptionsGroup:SetWidth(BASE_WIDTH_LOCKED)
         self.WishlistOptionsScrollGroup:SetWidth(BASE_WIDTH_LOCKED + 17)
-        -- self.WishlistOptionsScrollGroup:SetHeight(BASE_HEIGHT - 125)
-        self.WishlistOptionsScrollGroup:SetHeight(self.window.content.height + 57 - 125 - 15)
+
+        self.WishlistOptionsScrollGroup:SetHeight(MWL.Core.db.profile.gui.height - 125 - 15)
     else
         self.window:SetWidth(BASE_WIDTH_UNLOCKED + 17)
         self.OptionsGroup:SetWidth(BASE_WIDTH_UNLOCKED + 17)
         self.WishlistOptionsGroup:SetWidth(BASE_WIDTH_UNLOCKED)
         self.WishlistOptionsScrollGroup:SetWidth(BASE_WIDTH_UNLOCKED + 17)
 
-        -- self.WishlistOptionsScrollGroup:SetHeight(BASE_HEIGHT - 190)
-        self.WishlistOptionsScrollGroup:SetHeight(self.window.content.height + 57 - 190 - 15)
+        self.WishlistOptionsScrollGroup:SetHeight(MWL.Core.db.profile.gui.height - 190 - 15)
     end
     self.OptionsGroup:DoLayout()
     self.WishlistOptionsGroup:DoLayout()
@@ -348,13 +343,25 @@ local function CreateWindow(self)
     f:SetTitle("My Wishlist")
     f:SetStatusText("")
     f:SetLayout("flow")
-    f:SetHeight(BASE_HEIGHT)
+    f:SetHeight(MWL.Core.db.profile.gui.height)
     -- f:EnableResize(false)
     local originalOnHeightSet = f.OnHeightSet
-    f.OnHeightSet = function (...)
-        originalOnHeightSet(...)
+    f.OnHeightSet = function(_self, height)
+        originalOnHeightSet(_self, height)
+        MWL.Core.db.profile.gui.height = height
         UpdateSize(self)
     end
+    local originalOnMouseUp = f.title:GetScript("OnMouseUp")
+    f.title:SetScript("OnMouseUp", function(...)
+        originalOnMouseUp(...)
+        MWL.Core.db.profile.gui.location = { f:GetPoint() }
+    end)
+
+    if MWL.Core.db.profile.gui.location then
+        f:ClearAllPoints()
+        f:SetPoint(MWL.Core.db.profile.gui.location[3], MWL.Core.db.profile.gui.location[4], MWL.Core.db.profile.gui.location[5])
+    end
+
     local op, sc = CreateOptions(self)
     f:AddChild(op)
     f:AddChild(sc)

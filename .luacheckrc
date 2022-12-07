@@ -5,7 +5,6 @@ max_line_length = false
 
 exclude_files = {
 	"**/Libs/**",
-	"**/ExternalLibs/**",
 	"**/.git/**",
 	"**/scripts/**"
 }
@@ -18,7 +17,7 @@ ignore = {
 --	"211", -- Unused local variable
 --	"211/L", -- Unused local variable "L"
 --	"211/CL", -- Unused local variable "CL"
-	"211/CLM",
+	"211/MWL",
 	"212", -- Unused argument
 --	"431", -- shadowing upvalue
 --	"43.", -- Shadowing an upvalue, an upvalue argument, an upvalue loop variable.
@@ -27,23 +26,6 @@ ignore = {
 globals = {
 	-- Design
 	"LibStub",
-	-- Saved Variable
-	"CLM_DB",
-	"CLM_Logs",
-	"CLM_MinimapIcon",
-	-- 
-	"CLM2_DB",
-	"CLM2_Logs",
-	"CLM2_MinimapIcon",
-	-- Bindings
-	"CLM_Undo",
-	"CLM_Redo",
-	-- Monolith and Essential and Community
-	"MonDKP_DKPTable",
-	"MonDKP_Loot",
-	"CommDKP_DKPTable",
-	"CommDKP_Loot",
-	"CommDKP_DB",
 	-- RCLC
 	"RCLootCouncil",
 	-- WoW 

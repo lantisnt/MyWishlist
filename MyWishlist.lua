@@ -27,7 +27,10 @@ local defaults = {
     },
     profile = {
         wishlists = {},
-        minimap = {}
+        minimap = {},
+        gui = {
+            height = 380
+        }
     }
 }
 do

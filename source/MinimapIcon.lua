@@ -27,9 +27,8 @@ local function CreateMinimapDBI(self, dropdown)
         if button == "RightButton" then
             MWL.Manager:ToggleLock()
             MWL.GUI:Refresh()
-        --     if self:IsInitialized() then
-        --         CLM.UTILS.LibDD:ToggleDropDownMenu(1, nil, dropdown, s, -20, 0)
-        --     end
+            icon.objects[addonName]:GetScript("OnLeave")(icon.objects[addonName])
+            icon.objects[addonName]:GetScript("OnEnter")(icon.objects[addonName])
         else
             MWL.GUI:Toggle()
         end
