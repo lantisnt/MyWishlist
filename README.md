@@ -15,6 +15,8 @@ My Wishlist is a wishlist AddOn dedicated to raiders wanting to prepare their it
 * Gargul
 * RCLootCouncil
 
+## TMB Wishlist Import
+
 ## Other players wishlist inspection
 ## Configuration
 ## Localization
