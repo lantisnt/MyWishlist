@@ -366,6 +366,8 @@ local function CreateWindow(self)
     f:AddChild(op)
     f:AddChild(sc)
     self.window = f
+
+    self:Hide()
 end
 
 function GUI:Initialize()

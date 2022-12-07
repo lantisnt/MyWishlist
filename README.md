@@ -5,6 +5,7 @@ My Wishlist is a wishlist AddOn dedicated to raiders wanting to prepare their it
 * Adding items through slash commands (`/prio`) and UI
 * Tooltip display
 * Per-slot wishlists
+* Togglable lock/unlock
 * Profiles
 * Adjustable UI
 
