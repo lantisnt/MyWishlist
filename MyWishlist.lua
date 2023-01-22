@@ -4,12 +4,12 @@ local Core = LibStub("AceAddon-3.0"):NewAddon(name, "AceEvent-3.0")
 
 MWL.InternalSlots = {
     ["Head"] = "Head", ["Neck"] = "Neck", ["Shoulders"] = "Shoulders", ["Back"] = "Back", ["Chest"] = "Chest", ["Wrist"] = "Wrist", ["Hands"] = "Hands", ["Waist"] = "Waist", ["Legs"] = "Legs", ["Feet"] = "Feet", ["Finger"] = "Finger",
-    ["Trinket"] = "Trinket", ["Weapon"] = "Weapon", ["OffHand"] = "Held In Off-Hand", ["Ranged"] = "Ranged", ["Ammo"] = "Ammo", ["Shirt"] = "Shirt", ["Tabard"] = "Tabard", ["Miscellaneous"] = "Miscellaneous"
+    ["Trinket"] = "Trinket", ["Weapon"] = "Weapon", ["Held In Off-Hand"] = "Held In Off-Hand", ["Ranged"] = "Ranged", ["Ammo"] = "Ammo", ["Shirt"] = "Shirt", ["Tabard"] = "Tabard", ["Miscellaneous"] = "Miscellaneous"
 }
 
 MWL.InternalSlotsOrdered = {
     "Head", "Neck", "Shoulders", "Back", "Chest", "Wrist", "Hands", "Waist", "Legs", "Feet", "Finger",
-    "Trinket", "Weapon", "OffHand", "Ranged", "Ammo", "Shirt", "Tabard", "Miscellaneous"
+    "Trinket", "Weapon", "Held In Off-Hand", "Ranged", "Ammo", "Shirt", "Tabard", "Miscellaneous"
 }
 
 

@@ -20,7 +20,7 @@ local INVTYPE_to_MWL_slot_map = {
     ["INVTYPE_FINGER"]          = MWL.InternalSlots.Finger,
     ["INVTYPE_TRINKET"]         = MWL.InternalSlots.Trinket,
     ["INVTYPE_WEAPON"]          = MWL.InternalSlots.Weapon,
-    ["INVTYPE_SHIELD"]          = MWL.InternalSlots.OffHand,
+    ["INVTYPE_SHIELD"]          = MWL.InternalSlots["Held In Off-Hand"],
     ["INVTYPE_RANGED"]          = MWL.InternalSlots.Ranged,
     ["INVTYPE_CLOAK"]           = MWL.InternalSlots.Back,
     ["INVTYPE_2HWEAPON"]        = MWL.InternalSlots.Weapon,
@@ -28,7 +28,7 @@ local INVTYPE_to_MWL_slot_map = {
     ["INVTYPE_ROBE"]            = MWL.InternalSlots.Chest,
     ["INVTYPE_WEAPONMAINHAND"]  = MWL.InternalSlots.Weapon,
     ["INVTYPE_WEAPONOFFHAND"]   = MWL.InternalSlots.Weapon,
-    ["INVTYPE_HOLDABLE"]        = MWL.InternalSlots.OffHand,
+    ["INVTYPE_HOLDABLE"]        = MWL.InternalSlots["Held In Off-Hand"],
     ["INVTYPE_THROWN"]          = MWL.InternalSlots.Ranged,
     ["INVTYPE_RANGEDRIGHT"]     = MWL.InternalSlots.Ranged,
     ["INVTYPE_RELIC"]           = MWL.InternalSlots.Ranged,
@@ -107,6 +107,7 @@ local function AddItemInternal(self, itemId, note, position)
 
     local slot = INVTYPE_to_MWL_slot_map[itemEquipLoc] or MWL.InternalSlots.Miscellaneous
     local entry = MWL.NewWishlistEntry(item, note)
+    print(INVTYPE_to_MWL_slot_map[itemEquipLoc], MWL.InternalSlots.Miscellaneous, slot, position)
     tinsert(self.wishlists[slot], position, entry)
     UpdateWishlistedItemMetadata(self, itemId, true)
 end
